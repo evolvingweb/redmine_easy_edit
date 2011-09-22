@@ -7,20 +7,8 @@
 // ==/UserScript==
 
 
-var s=document.createElement('script');
-
-	s.src = '/javascripts/jquery.min.js';
-
-	s.onload = function() {
-  var s = document.createElement('script');
-  s.appendChild(document.createTextNode("(" + ready.toString() + ")(jQuery)"));
-  document.head.appendChild(s);
-};
-
-document.getElementsByTagName('head')[0].appendChild(s);
-
-function ready($) {
- 	jQuery.noConflict();
+(function ($) {
+ 	
 // 	Click handler for wiki pages.
   $('.wiki').not('.editable').dblclick(function () {
   	var loc = document.location.href;
@@ -54,4 +42,4 @@ function ready($) {
   	e.stopPropagation();
   });
 
-}
+})(jQuery);
