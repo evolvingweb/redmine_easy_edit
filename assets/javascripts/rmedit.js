@@ -25,9 +25,8 @@ function ready($) {
   $('.wiki').not('.editable').dblclick(function () {
   	var loc = document.location.href;
 // Kill everything after the hashmark if it exists.
-  	var killHash = /#.*$/;
-  	loc = loc.replace(killHash, '');
-//    if the url wnds in wiki, then we're on a front page, so the edit page is .../wiki/Wiki/edit
+  	loc = loc.replace(/#.*$/, '');
+//    if the url ends in wiki, then we're on a front page, so the edit page is .../wiki/Wiki/edit
     var wiki = /\/wiki$/;
     if (wiki.test(loc)) {
       loc += '/Wiki';
