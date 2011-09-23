@@ -6,8 +6,7 @@
 // @match http://rm.ewdev.ca/*
 // ==/UserScript==
 
-
-(function ($) {
+var doubleClickEdit = function ($) {
  	
 // 	Click handler for wiki pages.
   $('.wiki').not('.editable').dblclick(function () {
@@ -41,5 +40,20 @@
   	$(this).find('.contextual a:eq(0)').click();
   	e.stopPropagation();
   });
+};
 
-})(jQuery);
+console.log(document.readyState);
+
+
+if (document.readyState === "complete") {
+	doubleClickEdit(jQuery);
+}
+else {
+		var oldWinLoad = window.onload;
+		window.onload = function () {
+			if (typeof(oldWinLoad) === "function") {
+				oldWinLoad();
+			}
+			doubleClickEdit(jQuery);
+	};
+}
