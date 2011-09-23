@@ -15,17 +15,17 @@ jQuery(function ($) {
 	
 // 	Click handler for wiki pages.
   $('body.controller-wiki .wiki').dblclick(function () {
-  	var loc = document.location.href;
+  	var temporaryLocation = document.location.href;
 // Kill everything after the hashmark if it exists.
-  	loc = loc.replace(/#.*$/, '');
+  	temporaryLocation = temporaryLocation.replace(/#.*$/, '');
 //    if the url ends in wiki, then we're on a front page, so the edit page is .../wiki/Wiki/edit
     var wiki = /\/wiki$/;
-    if (wiki.test(loc)) {
-      loc += '/Wiki';
+    if (wiki.test(temporaryLocation)) {
+      temporaryLocation += '/Wiki';
     }
     // add edit and send in the location
-    loc += '/edit';
-    document.location = loc;
+    temporaryLocation += '/edit';
+    document.location = temporaryLocation;
   })
 //  subtask editing
   $('body.controller-issues #issue_tree').dblclick(function(e) {
