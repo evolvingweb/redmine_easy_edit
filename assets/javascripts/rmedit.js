@@ -1,11 +1,11 @@
 jQuery(function ($) {
  	
 	var highlightOnClick = function(highlightSet) {
+		var that = this;
   	// For Alex's irreversible habits...
   	if (event && ! event.ctrlKey) {
   		return;
   	}
-		var that = this;
 		// Make sure multiple clicks don't start a highlight/rehighlight queue.
 		if (this.effectRunning) {
 			return;

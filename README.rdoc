@@ -1,6 +1,12 @@
-= Redmine Google Docs Plugin
+= Redmine Easy Edit Plugin
 
-This is a plugin for Redmine that allows you to embed Google Spreadsheets and Docs into redmine pages. This is useful for keeping Google Docs-based documentation up-to-date with the issue queue. 
+This plugin provides a series of shortcuts bound to ctrl+doubleclick to make your Redmine experience better.
+
+For example: ctrl+dblclick on a wiki page brings you to the edit page as in MediaWiki, on the attributes section of an issue it updates the issue, and so on. 
+
+To tell if an element is handled, hold ctrl and single click on it. If it highlights and fades, then you're in for an adventure. Separate highlight boxes have unique behaviours.
+
+The behaviour was designed to be as intuitive as possible. If something doesn't make sense, feedback will always be appreciated. 
 
 == Installation
 
