@@ -1,15 +1,20 @@
-// ==UserScript==
-// @name redmine wiki edit
-// @namespace http://evolvingweb.ca
-// @description Adds double click automatic edit to redmine.
-// @match https://rm.ewdev.ca/*
-// @match http://rm.ewdev.ca/*
-// ==/UserScript==
-
-var doubleClickEdit = function ($) {
+jQuery(function ($) {
  	
+	var highlightOnClick = function(highlightSet) {
+		var that = this;
+		if (this.effectRunning) {
+			return;
+		}
+		this.effectRunning = true;
+		
+		if (!highlightSet) {
+			highlightSet = $(this);
+		}
+		highlightSet.effect("highlight", {}, 2000, function () {that.effectRunning = false;});
+	};
+	
 // 	Click handler for wiki pages.
-  $('.wiki').not('.editable').dblclick(function () {
+  $('body.controller-wiki .wiki').dblclick(function () {
   	var loc = document.location.href;
 // Kill everything after the hashmark if it exists.
   	loc = loc.replace(/#.*$/, '');
@@ -21,39 +26,44 @@ var doubleClickEdit = function ($) {
     // add edit and send in the location
     loc += '/edit';
     document.location = loc;
-  });
+  })
 //  subtask editing
-  $('#issue_tree').dblclick(function(e) {
-  	document.location = $('#issue_tree .contextual a').attr('href');
-  	e.stopPropagation();
-  });
-//  issue update bubbles
-  $('.wiki.editable').dblclick(function () {
-  	$(this).find('.contextual a:eq(1)').click();
-  });
+  $('body.controller-issues #issue_tree').dblclick(function(e) {
+  	var element = $(this).find('.contextual a:eq(0)');
+  	if (element.attr('onclick')) {
+  		element.click();
+  	}
+  	else {
+  		document.location = element.attr('href');
+  	}
+//  	e.stopPropagation();
+  })
+  .click(function () {highlightOnClick.call(this);});
+//  issue comments
+  
+  $('body.controller-issues .wiki.editable')
+    .dblclick(function () {
+  		$(this).find('.contextual a:eq(1)').click();
+    })
+    .click(function () {highlightOnClick.call(this);});
 // update issue 
-  $('.issue.details').dblclick(function () {
-  	$('#content .contextual a:eq(0)').click();
-  	$('#update .tabular legend a:eq(0)').click();
-  });
-  $('#relations').dblclick(function (e) {
+  $('body.controller-issues .issue.details .attributes')
+  	.dblclick(function () {
+	  	$('#content .contextual a:eq(0)').click();
+	  })
+	  .click(function () {highlightOnClick.call(this);});
+  // Edit description
+  var set = $('body.controller-issues .issue.details .wiki').prev().andSelf();
+  	set.dblclick(function (e) {
+		  	$('#content .contextual a:eq(0)').click();
+		  	$('#update .tabular legend a:eq(0)').click();
+		  })
+		  .click(function () {highlightOnClick.call(this, set);});
+  // Related issues
+  $('body.controller-issues #relations').dblclick(function (e) {
   	$(this).find('.contextual a:eq(0)').click();
-  	e.stopPropagation();
-  });
-};
+//  	e.stopPropagation();
+  })
+  .click(function () {highlightOnClick.call(this);});
+});
 
-console.log(document.readyState);
-
-
-if (document.readyState === "complete") {
-	doubleClickEdit(jQuery);
-}
-else {
-		var oldWinLoad = window.onload;
-		window.onload = function () {
-			if (typeof(oldWinLoad) === "function") {
-				oldWinLoad();
-			}
-			doubleClickEdit(jQuery);
-	};
-}
