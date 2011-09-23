@@ -6,6 +6,7 @@ jQuery(function ($) {
   		return;
   	}
 		var that = this;
+		// Make sure multiple clicks don't start a highlight/rehighlight queue.
 		if (this.effectRunning) {
 			return;
 		}
@@ -17,81 +18,63 @@ jQuery(function ($) {
 		highlightSet.effect("highlight", {}, 2000, function () {that.effectRunning = false;});
 	};
 	
+//	Literally.
+	var doWhatRedmineDoes = function (elements) {
+		// For Alex's irreversible habits...
+		if (! event.ctrlKey) {
+			return;
+		}
+		$(elements).each(
+			function (index, element) {
+		  	if ($(element).attr('onclick')) {
+		  		$(element).click();
+		  	}
+		  	else {
+		  		document.location = $(element).attr('href');
+		  	}		
+			}
+		)
+	}
+	
 // 	Click handler for wiki pages.
-  $('body.controller-wiki .wiki').dblclick(function (event) {
-  	// For Alex's irreversible habits...
-  	if (! event.ctrlKey) {
-  		return;
-  	}
-  	var temporaryLocation = document.location.href;
-// Kill everything after the hashmark if it exists.
-  	temporaryLocation = temporaryLocation.replace(/#.*$/, '');
-//    if the url ends in wiki, then we're on a front page, so the edit page is .../wiki/Wiki/edit
-    var wiki = /\/wiki$/;
-    if (wiki.test(temporaryLocation)) {
-      temporaryLocation += '/Wiki';
-    }
-    // add edit and send in the location
-    temporaryLocation += '/edit';
-    
-    document.location = temporaryLocation;
-  });
-//  subtask editing
+  $('body.controller-wiki .wiki')
+	  .dblclick(function (event) {
+	  	doWhatRedmineDoes('body.controller-wiki #content .contextual a:contains("Edit")');
+	  });
+  
+//  Subtask editing
   $('body.controller-issues #issue_tree')
-  	.dblclick(function(event) {
-	  		// For Alex's irreversible habits...
-	  	if (event && ! event.ctrlKey) {
-	  		return;
-	  	}
-	  	var element = $(this).find('.contextual a:eq(0)');
-	  	if (element.attr('onclick')) {
-	  		element.click();
-	  	}
-	  	else {
-	  		document.location = element.attr('href');
-	  	}
+  	.dblclick(function (event) {
+	  	doWhatRedmineDoes($(this).find('.contextual a:contains("Add")'));
 	  })
 	  .click(function (event) {highlightOnClick.call(this);});
-//  issue comments
   
+//  Issue comments
   $('body.controller-issues .wiki.editable')
     .dblclick(function (event) {
-    	// For Alex's irreversible habits...
-    	if (event && ! event.ctrlKey) {
-    		return;
-    	}
-  		$(this).find('.contextual a:eq(1)').click();
+  		doWhatRedmineDoes($(this).find('.contextual a[title="Edit"]'));
     })
     .click(function (event) {highlightOnClick.call(this);});
-// update issue 
+  
+// Update issue 
   $('body.controller-issues .issue.details .attributes')
   	.dblclick(function (event) {
-  		// For Alex's irreversible habits...
-    	if (event && ! event.ctrlKey) {
-    		return;
-    	}
-	  	$('#content .contextual a:eq(0)').click();
+	  	doWhatRedmineDoes('#content .contextual a:contains("Update")');
 	  })
 	  .click(function (event) {highlightOnClick.call(this);});
-  // Edit description
+  
+// Edit description
   var set = $('body.controller-issues .issue.details .wiki').prev().andSelf();
   	set.dblclick(function (event) {
-  		// For Alex's irreversible habits...
-    	if (event && ! event.ctrlKey) {
-    		return;
-    	}
-	  	$('#content .contextual a:eq(0)').click();
-	  	$('#update .tabular legend a:eq(0)').click();
+	  	doWhatRedmineDoes('#content .contextual a:contains("Update"), #update .tabular legend a:contains("More")');
 	  })
 	  .click(function (event) {highlightOnClick.call(this, set);});
-  // Related issues
+  	
+// Related issues
   $('body.controller-issues #relations').dblclick(function (event) {
-  	// For Alex's irreversible habits...
-  	if (event && ! event.ctrlKey) {
-  		return;
-  	}
-  	$(this).find('.contextual a:eq(0)').click();
+  	doWhatRedmineDoes($(this).find('.contextual a:contains("Add")'));
   })
   .click(function (event) {highlightOnClick.call(this);});
+  
 });
 
