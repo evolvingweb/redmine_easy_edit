@@ -3,7 +3,7 @@ jQuery(function ($) {
 	var highlightOnClick = function(highlightSet) {
 		var that = this;
   	// For Alex's irreversible habits...
-  	if (event && ! event.ctrlKey) {
+  	if (event && ! (event.ctrlKey || event.metaKey)) {
   		return;
   	}
 		// Make sure multiple clicks don't start a highlight/rehighlight queue.
@@ -21,7 +21,7 @@ jQuery(function ($) {
 //	Literally.
 	var doWhatRedmineDoes = function (elements) {
 		// For Alex's irreversible habits...
-		if (! event.ctrlKey) {
+  	if (event && ! (event.ctrlKey || event.metaKey)) {
 			return;
 		}
 		$(elements).each(
