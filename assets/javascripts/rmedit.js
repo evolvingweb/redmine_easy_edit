@@ -30,18 +30,39 @@ jQuery(function ($) {
 		  		$(element).click();
 		  	}
 		  	else {
-		  		document.location = $(element).attr('href');
+		  		document.location = $(element).attr('href');  
 		  	}		
 			}
 		)
 	}
 	
+  var caretMove = function (term) {
+    // Select appropriate heading
+    var elem = $('body.controller-wiki textarea.wiki-edit');
+    // Workaround for bug in jquery.caret
+    if (elem.length) {
+      elem.caret(term);
+     // elem.sendkeys('{downarrow}');
+    }
+  };
+  
+  var caretSearch = $.cookie('redmine-easy-edit-caret-wiki-target');
+  if (caretSearch) {
+    $.cookie('redmine-easy-edit-caret-wiki-target', null, {'path' : '/'});
+
+    caretSearch = new RegExp(caretSearch);
+    caretMove(caretSearch);
+  }
+
 // 	Click handler for wiki pages.
   $('body.controller-wiki .wiki')
-	  .dblclick(function (event) {
-	  	doWhatRedmineDoes('body.controller-wiki #content .contextual a:contains("Edit")');
-	  });
-  
+    .dblclick(function (event) {
+        var wikiTarget =  event.target.localName + '\.\ +' + event.target.firstChild.textContent;
+        $.cookie('redmine-easy-edit-caret-wiki-target', wikiTarget, {'path' : '/'});
+        // console.log(event); 
+        doWhatRedmineDoes('body.controller-wiki #content .contextual a:contains("Edit")');
+    });
+
 //  Subtask editing
   $('body.controller-issues #issue_tree')
   	.dblclick(function (event) {
@@ -63,6 +84,7 @@ jQuery(function ($) {
 	  })
 	  .click(function (event) {highlightOnClick.call(this);});
   
+
 // Edit description
   var set = $('body.controller-issues .issue.details .wiki').prev().andSelf();
   	set.dblclick(function (event) {
