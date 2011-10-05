@@ -9,6 +9,10 @@ jQuery.fn.scrollToText = function(search) {
 
   //EWHACK we're assuming the arg is a regexp
   var charNo = text.search(search);
+  //console.log(this);
+  //console.log(this.text());
+  //console.log(search);
+  //console.log(charNo);
   
   // this SPAN will allow up to determine given charecter position
   //EWHACK 
@@ -80,48 +84,94 @@ jQuery(function ($) {
 		)
 	}
 	
-  var caretMove = function (term) {
+  var caretMove = function () {
+    var caretSearch = $.cookie('redmine-easy-edit-caret-wiki-target');
+    //console.log("CARET SEARCH: ");
+    //console.log(caretSearch);
+    if (!caretSearch) {
+      return;
+    }
+    $.cookie('redmine-easy-edit-caret-wiki-target', null, {'path' : '/'});
+    caretSearch = new RegExp(caretSearch);
+    //console.log(caretSearch);
+
     // Select appropriate heading
     var elem = $('body.controller-wiki textarea.wiki-edit');
     // Workaround for bug in jquery.caret
     if (elem.length) {
-      elem.scrollToText(term);
-      elem.caret(term);
+      //console.log("A");
+      elem.scrollToText(caretSearch);
+      elem.caret(caretSearch);
     }
   };
-  
-  var caretSearch = $.cookie('redmine-easy-edit-caret-wiki-target');
-  if (caretSearch) {
-    $.cookie('redmine-easy-edit-caret-wiki-target', null, {'path' : '/'});
 
-    caretSearch = new RegExp(caretSearch);
-    caretMove(caretSearch);
-  }
+  //TODO: move this somewhere better since it's top level!!
+  caretMove();
+  
 
   var setCaretCookie = function (event) {
     var clickedElem = event.target;
-    //if clicked on link, try acting on the parent heading
-    if (clickedElem instanceof HTMLAnchorElement && 
-        clickedElem.className == "wiki-anchor" && 
-        clickedElem.parentElement instanceof HTMLHeadingElement) {
+    if ( $(clickedElem).is('a.wiki-anchor') && $(clickedElem).parent().is(':header')) {
       clickedElem = clickedElem.parentElement;
     }
     //only act on clicked headings
-    if (!clickedElem instanceof HTMLHeadingElement) {
-      return false;
+    if (!$(clickedElem).is(':header')) {
+      //try finding a nearest preceding parent (get top level parent div, then get previous header)
+      var prevHeader;
+      var topElem = $(clickedElem)
+        .parentsUntil('.wiki')
+        .last();
+      if ( topElem.is(':header')) {
+      //if clicked within a heading tag
+        prevHeader = topElem;
+      } else { 
+      //if clicked not within a heading tag
+        prevHeader = topElem.prevAll(':header').first();
+      }
+      if (prevHeader.length) {
+        clickedElem = prevHeader.get(0);
+      } else {
+        return false;
+      }
     }
-    var wikiTarget =  clickedElem.localName + '\.\ +' + clickedElem.firstChild.textContent;
+
+    var makeLiteralPattern = function (str) {
+      str = str.replace(/([\\\^\$*+[\]?{}.=!:(|)])/g,"\\\$1");
+      return str;
+    }
+    //console.log("clicked on this dude");
+    //console.log(event);
+    var titleSearchString = $(clickedElem).contents(':not(a.wiki-anchor)').map( function() { 
+        //console.log("MAPPING");
+        //console.log($(this).text());
+        return makeLiteralPattern($(this).text()); 
+    }).get().join(".*");
+
+    var wikiTarget =  makeLiteralPattern(clickedElem.localName) + '\\.\ +.*' + titleSearchString;
+    //console.log("D");
+    //console.log(wikiTarget);
+    //console.log(titleSearchString);
+    //return true;
     $.cookie('redmine-easy-edit-caret-wiki-target', wikiTarget, {'path' : '/'});
+    return false;
   }
 
 // 	Click handler for wiki pages.
   $('body.controller-wiki .wiki')
     .dblclick(function (event) {
-        setCaretCookie(event);
-        // console.log(event); 
-        doWhatRedmineDoes('body.controller-wiki #content .contextual a:contains("Edit")');
-        return false;
+      // For Alex's irreversible habits...
+      if (event && ! (event.ctrlKey || event.metaKey)) {
+        return;
+      }
+        var stopRedmineClick = setCaretCookie(event);
+        if (!stopRedmineClick) { 
+          doWhatRedmineDoes('body.controller-wiki #content .contextual a:contains("Edit")');
+          return false;
+        } else { 
+          return true;
+        }
     }).click(function (event) {
+      //  setCaretCookie(event);
       //prevent "wiki-anchor" links within heading from being control-clickable
       if(event.target.className == "wiki-anchor"  && (event.metaKey || event.ctrlKey)) {
         return false;
