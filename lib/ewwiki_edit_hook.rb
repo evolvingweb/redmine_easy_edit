@@ -6,8 +6,6 @@ class EWWikiEditHook < Redmine::Hook::ViewListener
 #      javascript_include_tag("jquery.caret.1.02.js", :plugin => 'redmine_easy_edit')+
       javascript_include_tag("jquery.caret.1.02.min.js", :plugin => 'redmine_easy_edit')+
       javascript_include_tag("jquery.cookie.js", :plugin => 'redmine_easy_edit')+
-      javascript_include_tag("bililiteRange.js", :plugin => 'redmine_easy_edit')+
-      javascript_include_tag("jquery.sendkeys.js", :plugin => 'redmine_easy_edit')+
       javascript_include_tag("rmedit.js", :plugin => 'redmine_easy_edit')
   end
 end
