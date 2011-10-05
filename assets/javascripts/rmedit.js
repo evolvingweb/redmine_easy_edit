@@ -117,7 +117,7 @@ jQuery(function ($) {
     //only act on clicked headings
     if (!$(clickedElem).is(':header')) {
       //try finding a nearest preceding parent (get top level parent div, then get previous header)
-      var prevHeader;
+      var prevHeader, prevSiblingHeader;
       var topElem = $(clickedElem)
         .parentsUntil('.wiki')
         .last();
@@ -131,7 +131,13 @@ jQuery(function ($) {
       if (prevHeader.length) {
         clickedElem = prevHeader.get(0);
       } else {
-        return false;
+        prevSiblingHeader = $(clickedElem).prevAll(':header').first();
+        if (prevSiblingHeader.length) {
+          clickedElem = prevSiblingHeader.get(0);
+        }
+        else {
+          return false;
+        }
       }
     }
 
