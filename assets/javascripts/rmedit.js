@@ -277,7 +277,7 @@ jQuery(function ($) {
   
 
 // Edit description
-  var set = $('body.controller-issues .issue.details .wiki').prev().andSelf();
+  var set = $('body.controller-issues .issue.details .wiki, body.controller-issues .issue.details .subject').prev().andSelf();
   	set.dblclick(function (event) {
 	  	doWhatRedmineDoes('#content .contextual a:contains("Update"), #update .tabular legend a:contains("More")');
 	  })
