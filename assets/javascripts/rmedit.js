@@ -2,13 +2,13 @@
  * Adapted from http://stackoverflow.com/questions/5458655/jquery-scroll-textarea-to-given-position
  * Buggy, hacky but kinda works in initial testing.
  */
-jQuery.fn.scrollToText = function(search) {
+jQuery.fn.scrollToText = function(charNo) {
   // getting given textarea contents
   var text = jQuery(this).text();
   // number of charecter we want to show
 
   //EWHACK we're assuming the arg is a regexp
-  var charNo = text.search(search);
+  //var charNo = text.search(search);
   //console.log(this);
   //console.log(this.text());
   //console.log(search);
@@ -46,6 +46,54 @@ jQuery.fn.scrollToText = function(search) {
   // no need for DIV anymore
   copyDiv.remove();
 };
+
+/*
+ * Performs a fuzzy search on set based on pattern, suggested starting location.
+ * @see http://neil.fraser.name/software/diff_match_patch/svn/trunk/demos/demo_match.html
+ * @see http://neil.fraser.name/software/diff_match_patch/svn/trunk/javascript/diff_match_patch_uncompressed.js
+ */
+jQuery.fn.ewDmp = function (pattern,options) {
+  if ( ! this.length > 0 || !pattern ) { 
+    return -1;
+  }
+
+  var dmp = new diff_match_patch();
+  var text = this.text();
+
+  if (options.suggestedLocation) {
+    options.suggestedLocation = Math.round( options.suggestedLocation * text.length );
+  }
+  // console.log("SUGG "+options.suggestedLocation);
+
+  var settings = { 
+    distance: 1000.0, 
+    threshold: 0.8,
+    suggestedLocation: 100,
+  }
+  jQuery.extend( settings, options );
+    
+  dmp.Match_Distance = settings.distance;
+  dmp.Match_Threshold = settings.threshold;
+  //dmp.Match_MaxBits == 32 ; //at least for Chrome
+
+  var match = dmp.match_main(text, pattern, settings.suggestedLocation);
+
+  if (match == -1) {
+    // console.log("Failed to find match");
+    return -1;
+  } else {
+    var endMatch = text.indexOf("\n", match);
+    if (endMatch == -1) { 
+      endMatch = text.length + 1;
+    }
+    // var quote = text.substring(match, endMatch - 1);
+    // quote = quote.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    // quote = quote.replace(/\n/g, '&para;');
+    // console.log( 'Match found at character ' + match + ': &nbsp; <CODE>' + quote + '</' + 'CODE>');
+  }
+  return {start:match, end:endMatch};
+}
+
 
 jQuery(function ($) {
 	var highlightOnClick = function(highlightSet) {
@@ -85,23 +133,27 @@ jQuery(function ($) {
 	}
 	
   var caretMove = function () {
-    var caretSearch = $.cookie('redmine-easy-edit-caret-wiki-target');
+    var cookieData = $.cookie('redmine-easy-edit-caret-wiki-target');
     //console.log("CARET SEARCH: ");
-    //console.log(caretSearch);
-    if (!caretSearch) {
+    //console.log(cookieData);
+    if (!cookieData) {
       return;
     }
     $.cookie('redmine-easy-edit-caret-wiki-target', null, {'path' : '/'});
-    caretSearch = new RegExp(caretSearch);
-    //console.log(caretSearch);
+    cookieData = JSON.parse(cookieData);
+    //cookieData = new RegExp(cookieData.titleRegex);
+    // console.log(cookieData);
 
     // Select appropriate heading
-    var elem = $('body.controller-wiki textarea.wiki-edit');
+    var elem = $('body.controller-wiki textarea.wiki-edit').first();
     // Workaround for bug in jquery.caret
     if (elem.length) {
-      //console.log("A");
-      elem.scrollToText(caretSearch);
-      elem.caret(caretSearch);
+      var match = elem.ewDmp(cookieData.matchPattern, {suggestedLocation: cookieData.matchSuggestedLocation});
+      // console.log("A"); console.log(match);
+      if (match.start != -1) {
+        elem.scrollToText(match.start);
+        elem.caret(match.start, match.end);
+      }
     }
   };
 
@@ -110,35 +162,38 @@ jQuery(function ($) {
   
 
   var setCaretCookie = function (event) {
-    var clickedElem = event.target;
-    if ( $(clickedElem).is('a.wiki-anchor') && $(clickedElem).parent().is(':header')) {
-      clickedElem = clickedElem.parentElement;
-    }
-    //only act on clicked headings
-    if (!$(clickedElem).is(':header')) {
-      //try finding a nearest preceding parent (get top level parent div, then get previous header)
-      var prevHeader, prevSiblingHeader;
-      var topElem = $(clickedElem)
-        .parentsUntil('.wiki')
-        .last();
-      if ( topElem.is(':header')) {
-      //if clicked within a heading tag
-        prevHeader = topElem;
-      } else { 
-      //if clicked not within a heading tag
-        prevHeader = topElem.prevAll(':header').first();
+    var determineParentHeader = function (clickedElem) {
+      if ( $(clickedElem).is('a.wiki-anchor') && $(clickedElem).parent().is(':header')) {
+        clickedElem = clickedElem.parentElement;
       }
-      if (prevHeader.length) {
-        clickedElem = prevHeader.get(0);
-      } else {
-        prevSiblingHeader = $(clickedElem).prevAll(':header').first();
-        if (prevSiblingHeader.length) {
-          clickedElem = prevSiblingHeader.get(0);
+      //only act on clicked headings
+      if (!$(clickedElem).is(':header')) {
+        //try finding a nearest preceding parent (get top level parent div, then get previous header)
+        var prevHeader, prevSiblingHeader;
+        var topElem = $(clickedElem)
+          .parentsUntil('.wiki')
+          .last();
+        if ( topElem.is(':header')) {
+        //if clicked within a heading tag
+          prevHeader = topElem;
+        } else { 
+        //if clicked not within a heading tag
+          prevHeader = topElem.prevAll(':header').first();
         }
-        else {
-          return false;
+        if (prevHeader.length) {
+          clickedElem = prevHeader.get(0);
+        } else {
+          prevSiblingHeader = $(clickedElem).prevAll(':header').first();
+          if (prevSiblingHeader.length) {
+            clickedElem = prevSiblingHeader.get(0);
+          }
+          else {
+            return false;
+          }
         }
       }
+      return clickedElem;
+
     }
 
     var makeLiteralPattern = function (str) {
@@ -147,18 +202,33 @@ jQuery(function ($) {
     }
     //console.log("clicked on this dude");
     //console.log(event);
-    var titleSearchString = $(clickedElem).contents(':not(a.wiki-anchor)').map( function() { 
+    var parentHeader = determineParentHeader(event.target);
+    var titleSearchString = $(parentHeader).contents(':not(a.wiki-anchor)').map( function() { 
         //console.log("MAPPING");
         //console.log($(this).text());
         return makeLiteralPattern($(this).text()); 
     }).get().join(".*");
 
-    var wikiTarget =  makeLiteralPattern(clickedElem.localName) + '\\.\ +.*' + titleSearchString;
-    //console.log("D");
-    //console.log(wikiTarget);
-    //console.log(titleSearchString);
-    //return true;
-    $.cookie('redmine-easy-edit-caret-wiki-target', wikiTarget, {'path' : '/'});
+    var wikiTarget =  makeLiteralPattern(parentHeader.localName) + '\\.\ +.*' + titleSearchString;
+    // console.log("D");
+    // console.log(wikiTarget);
+    // console.log(titleSearchString);
+    // return true;
+    // console.log(event);
+    
+    //EWHACK: trying another approach
+    var matchPattern = event.target.innerText.substring(0,32);
+    // console.log(event.target);
+    // console.log(jQuery(event.target).offset());
+    // console.log(event.currentTarget);
+    // console.log(jQuery(event.currentTarget).offset());
+    var clickedItemWikiOffset =  jQuery(event.target).offset().top - jQuery(event.currentTarget).offset().top;
+    var matchSuggestedLocation = clickedItemWikiOffset / event.currentTarget.offsetHeight; 
+    var cookieStr = JSON.stringify( {titleRegex:wikiTarget, 'matchPattern':matchPattern, 'matchSuggestedLocation': matchSuggestedLocation});
+    // console.log(cookieStr);
+    // return true;
+
+    $.cookie('redmine-easy-edit-caret-wiki-target', cookieStr, {'path' : '/'});
     return false;
   }
 
