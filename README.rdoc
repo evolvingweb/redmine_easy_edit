@@ -34,9 +34,7 @@ will be at the top of the edit page.
 
 == To Do
 
-1. Add user specific controls to enable/disable the plugin and choose the meta-key (e.g. just double-click, 
-ctrl-dblclick, super-dblclick, etc.).
-
+1. Add user specific controls to enable/disable the plugin and choose the meta-key (e.g. just double-click, ctrl-dblclick, super-dblclick, etc.).
 2. Improve the wiki-jumping accuracy.
 
 == Contributions
