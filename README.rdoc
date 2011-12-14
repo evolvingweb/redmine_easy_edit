@@ -1,14 +1,45 @@
 = Redmine Easy Edit Plugin
 
-This plugin provides a series of shortcuts bound to ctrl+doubleclick to make your Redmine experience better.
+Thomas Getgood
+thomas@evolvingweb.ca
 
-For example: ctrl+dblclick on a wiki page brings you to the edit page as in MediaWiki, on the attributes section of an issue it updates the issue, and so on. 
+Last edit: Wed Dec 14 11:11:27 EST 2011
 
-To tell if an element is handled, hold ctrl and single click on it. If it highlights and fades, then you're in for an adventure. Separate highlight boxes have unique behaviours.
+== Overview
 
-The behaviour was designed to be as intuitive as possible. If something doesn't make sense, feedback will always be appreciated. 
+This plugin add mediawiki style double-click-to-edit shortcuts to redmine.
+
+The current behaviour is to look for ctrl+dblclick (command+dblclick on a mac) though 
+this will be a user setting in the furture. 
+
+
+== Shortcuts
+
+=== Issues
+
+You can double click to edit the issue details, description, comments, subtasks, or add a task.
+
+=== Wiki
+
+Double click anywhere on the page to go to the edit page. The plugin will try to jump to the
+text that you double clicked on in the edit pane, but this is still buggy. If it fails you
+will be at the top of the edit page. 
+
 
 == Installation
 
 1. Extract/clone to the vendor/plugins folder of your Redmine installation.
 2. Enjoy
+
+
+== To Do
+
+1. Add user specific controls to enable/disable the plugin and choose the meta-key (e.g. just double-click, 
+ctrl-dblclick, super-dblclick, etc.).
+
+2. Improve the wiki-jumping accuracy.
+
+== Contributions
+
+All contributions and extensions are welcome. If you have an idea for a good shortcut but don't
+have the time to implement it, let me know. If it's useful I'll add it in. 
