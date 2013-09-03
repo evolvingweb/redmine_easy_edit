@@ -1,36 +1,25 @@
-= Redmine Easy Edit Plugin
+= Redmine Easy Edit
 
-Thomas Getgood
-thomas@evolvingweb.ca
+This Redmine plugin add mediawiki-style double-click-to-edit workflow to Redmine wiki
+pages and issue pages.
 
-Last edit: Wed Dec 14 11:11:27 EST 2011
+== Wiki
 
-== Overview
+While holding down CMD (or CTRL on Windows), double-clicking on line in a
+rendered wiki page brings up the edit form with that line highlighted.
+The line detection isn't perfect, but works most of the time.
 
-This plugin add mediawiki style double-click-to-edit shortcuts to redmine.
+![](https://raw.github.com/evolvingweb/redmine-easy-edit/master/demo.gif)
 
-The current behaviour is to look for ctrl+dblclick (command+dblclick on a mac) though 
-this will be a user setting in the furture. 
+== Issues
 
-
-== Shortcuts
-
-=== Issues
-
-You can double click to edit the issue details, description, comments, subtasks, or add a task.
-
-=== Wiki
-
-Double click anywhere on the page to go to the edit page. The plugin will try to jump to the
-text that you double clicked on in the edit pane, but this is still buggy. If it fails you
-will be at the top of the edit page. 
-
+You can similarly Cmd+Doubleclick on issue title, issue description, issue
+comment body, issue subtask box, related issues box, and the appropriate form
+is launched. No line detection is performed.
 
 == Installation
 
-1. Extract/clone to the vendor/plugins folder of your Redmine installation.
-2. Enjoy
-
+Simply extract/clone to the vendor/plugins folder of your Redmine installation.
 
 == To Do
 
@@ -39,5 +28,4 @@ will be at the top of the edit page.
 
 == Contributions
 
-All contributions and extensions are welcome. If you have an idea for a good shortcut but don't
-have the time to implement it, let me know. If it's useful I'll add it in. 
+Pull requests welcome. 
