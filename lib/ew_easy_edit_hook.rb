@@ -9,7 +9,7 @@ class EWEasyEditHook < Redmine::Hook::ViewListener
 
     return unless controller.class.name == "WikiController" or controller.class.name == "IssuesController"
 
-    files = %w{jquery.min.js jquery.noconflict.js} 
+    files = []
 
     if controller.class.name == "IssuesController" then
       files += %w{issue-easy-edit.js}
