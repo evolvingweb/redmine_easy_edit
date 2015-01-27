@@ -1,6 +1,6 @@
-/* 
- * Register a click handler on wiki pages that saves the text clicked on to a cookie and then 
- * redirects to the edit page. 
+/*
+ * Register a click handler on wiki pages that saves the text clicked on to a cookie and then
+ * redirects to the edit page.
  */
 jQuery(function($) {
 
@@ -19,7 +19,7 @@ jQuery(function($) {
         if ( topElem.is(':header')) {
         //if clicked within a heading tag
           prevHeader = topElem;
-        } else { 
+        } else {
         //if clicked not within a heading tag
           prevHeader = topElem.prevAll(':header').first();
         }
@@ -46,17 +46,17 @@ jQuery(function($) {
       return str;
     }
     var parentHeader = determineParentHeader(event.target);
-    var titleSearchString = $(parentHeader).contents(':not(a.wiki-anchor)').map( function() { 
-        return makeLiteralPattern($(this).text()); 
+    var titleSearchString = $(parentHeader).contents(':not(a.wiki-anchor)').map( function() {
+        return makeLiteralPattern($(this).text());
     }).get().join(".*");
 
     var wikiTarget =  makeLiteralPattern(parentHeader.localName) + '\\.\ +.*' + titleSearchString;
-    
+
     //EWHACK: trying another approach
     var matchPattern = event.target.innerText.substring(0,32);
 
     var clickedItemWikiOffset =  jQuery(event.target).offset().top - jQuery(event.currentTarget).offset().top;
-    var matchSuggestedLocation = clickedItemWikiOffset / event.currentTarget.offsetHeight; 
+    var matchSuggestedLocation = clickedItemWikiOffset / event.currentTarget.offsetHeight;
     var cookieStr = JSON.stringify( {titleRegex:wikiTarget, 'matchPattern':matchPattern, 'matchSuggestedLocation': matchSuggestedLocation});
     // return true;
 
@@ -64,7 +64,7 @@ jQuery(function($) {
     return false;
   }
 
-// 	Click handler for wiki pages.
+  // Click handler for wiki pages.
   $('body.controller-wiki .wiki')
     .dblclick(function (event) {
       // For Alex's irreversible habits...
