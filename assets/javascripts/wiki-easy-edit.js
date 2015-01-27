@@ -53,7 +53,7 @@ jQuery(function($) {
     var wikiTarget =  makeLiteralPattern(parentHeader.localName) + '\\.\ +.*' + titleSearchString;
 
     //EWHACK: trying another approach
-    var matchPattern = event.target.innerText.substring(0,32);
+    var matchPattern = event.target.textContent.substring(0,32);
 
     var clickedItemWikiOffset =  jQuery(event.target).offset().top - jQuery(event.currentTarget).offset().top;
     var matchSuggestedLocation = clickedItemWikiOffset / event.currentTarget.offsetHeight;
