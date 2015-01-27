@@ -68,7 +68,7 @@ jQuery(function($) {
   $('body.controller-wiki .wiki')
     .dblclick(function (event) {
       // For Alex's irreversible habits...
-      if ($('#loggedas a').text() !== "thomas" && event &&!(event.ctrlKey || event.metaKey)) {
+      if (event &&!(event.ctrlKey || event.metaKey)) {
         return;
       }
       setCaretCookie(event);

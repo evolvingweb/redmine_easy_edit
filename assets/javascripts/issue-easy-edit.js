@@ -3,7 +3,7 @@ jQuery(function ($) {
   //  Literally.
   var doWhatRedmineDoes = function (event, elements) {
     // For Alex's irreversible habits...
-    if ($('#loggedas a').text() !== "thomas" && event && !(event.ctrlKey || event.metaKey)) {
+    if (event && !(event.ctrlKey || event.metaKey)) {
       return;
     }
     $(elements).each(
