@@ -1,8 +1,8 @@
 jQuery(function ($) {
 
-  //  Literally.
+  // takes a jQuery selector (elements) which is assumed to give a list of <a>
+  // tags we would have had to manually click on without this plugin.
   var doWhatRedmineDoes = function (event, elements) {
-    // For Alex's irreversible habits...
     if (event && !(event.ctrlKey || event.metaKey)) {
       return;
     }
@@ -33,14 +33,17 @@ jQuery(function ($) {
   // Update issue
   $('body.controller-issues .issue.details .attributes')
     .dblclick(function (event) {
-      doWhatRedmineDoes(event, '#content .contextual a:contains("Update")');
+      doWhatRedmineDoes(event, '#content .contextual a:contains("Edit")');
     });
 
 
   // Edit description
-  var set = $('body.controller-issues .issue.details .wiki, body.controller-issues .issue.details .subject').prev().andSelf();
-    set.dblclick(function (event) {
-      doWhatRedmineDoes(event, '#content .contextual a:contains("Update"), #update .tabular legend a:contains("More")');
+  $('body.controller-issues .issue.details .wiki, body.controller-issues .issue.details .subject').prev().andSelf()
+    .dblclick(function (event) {
+      // ideally, the selector should be img[alt="Edit"], but that won't work
+      // given how `elements' is treated by doWhatRedmineDoes, hopefully
+      // a[href="#"] doesn't collide with other thins.
+      doWhatRedmineDoes(event, '#content .contextual a:contains("Edit"), #update .tabular a[href="#"]');
     });
 
   // Related issues
