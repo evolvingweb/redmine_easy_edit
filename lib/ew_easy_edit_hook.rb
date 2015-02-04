@@ -21,7 +21,7 @@ class EWEasyEditHook < Redmine::Hook::ViewListener
       if action == "show" then
         files += %w{wiki-easy-edit.js jquery.cookie.js}
       elsif action == "edit" then
-        files += %w{wiki-edit-jump.js jquery.cookie.js jquery.caret.1.02.min.js diff_match_patch.js}
+        files += %w{wiki-edit-jump.js jquery.cookie.js diff_match_patch.js}
       end
     end
 

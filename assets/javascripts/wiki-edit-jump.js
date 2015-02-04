@@ -48,6 +48,24 @@ jQuery.fn.scrollToText = function(charNo) {
   copyDiv.remove();
 };
 
+// Taken from http://stackoverflow.com/a/841121/9621
+jQuery.fn.textareaSetSelection = function(start, end) {
+    if(!end) end = start;
+    return this.each(function() {
+        if (this.setSelectionRange) {
+            this.focus();
+            this.setSelectionRange(start, end);
+        } else if (this.createTextRange) {
+            var range = this.createTextRange();
+            range.collapse(true);
+            range.moveEnd('character', end);
+            range.moveStart('character', start);
+            range.select();
+        }
+    });
+};
+
+
 /*
  * Performs a fuzzy search on set based on pattern, suggested starting location.
  * @see http://neil.fraser.name/software/diff_match_patch/svn/trunk/demos/demo_match.html
@@ -115,7 +133,7 @@ jQuery(function ($) {
       var match = elem.ewDmp(cookieData.matchPattern, {suggestedLocation: cookieData.matchSuggestedLocation});
       if (match.start != -1) {
         elem.scrollToText(match.start);
-        elem.caret(match.start, match.end);
+        elem.textareaSetSelection(match.start, match.end);
       }
     }
 });
