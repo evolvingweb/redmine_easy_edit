@@ -46,7 +46,13 @@ jQuery(function($) {
       return str;
     }
     var parentHeader = determineParentHeader(event.target);
-    var titleSearchString = $(parentHeader).contents(':not(a.wiki-anchor)').map( function() {
+
+    //var titleSearchString = $(parentHeader).contents(':not(a.wiki-anchor)').map( function() {
+    var titleSearchString = $(parentHeader).contents().map( function() {
+        // skip <a href="#Wiki" class="wiki-anchor">&para;</a>
+        if ($(this).hasClass('wiki-anchor')) {
+          return '';
+        }
         return makeLiteralPattern($(this).text());
     }).get().join(".*");
 
