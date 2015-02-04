@@ -19,11 +19,14 @@ jQuery.fn.scrollToText = function(charNo) {
   text = text.substring(0, charNo) + anch + text.substring(charNo);
 
   // creating a DIV that is an exact copy of textarea
+  // NB: I inspected the CSS of copyDiv and found all properties that the redmine
+  // theme is setting. If the offsetting breaks, redo this.
   var copyDiv = jQuery('<div id="copy"></div>')
                   .append(text.replace(/\n/g, '<br />')) // making newlines look the same
                   .css('width', jQuery(this).attr('clientWidth')) // width without scrollbar
                   .css('font-size', jQuery(this).css('font-size'))
                   .css('font-family', jQuery(this).css('font-family'))
+                  .css('line-height', jQuery(this).css('line-height'))
                   .css('padding', jQuery(this).css('padding'));
 
   // inserting new div after textarea - this is needed because .position() wont work on invisible elements
