@@ -6,16 +6,15 @@ jQuery(function ($) {
     if (event && !(event.ctrlKey || event.metaKey)) {
       return;
     }
-    $(elements).each(
-      function (index, element) {
-        if ($(element).attr('onclick')) {
-          $(element).click();
-        }
-        else {
-          document.location = $(element).attr('href');
-        }
+    for (idx = 0; idx < elements.length; idx++) {
+      element = elements[idx];
+      if ($(element).attr('onclick')) {
+        $(element).click();
       }
-    )
+      else if ($(element).attr('href')) {
+        document.location = $(element).attr('href');
+      }
+    }
   }
 
   //  Subtask editing
