@@ -1,7 +1,7 @@
 jQuery(function ($) {
 
-  // takes a jQuery selector (elements) which is assumed to give a list of <a>
-  // tags we would have had to manually click on without this plugin.
+  // takes an array of jQuery objects and clicks through them. If a single
+  // jQuery object is given, it's treated as an iterator.
   var doWhatRedmineDoes = function (event, elements) {
     if (event && !(event.ctrlKey || event.metaKey)) {
       return;
@@ -32,17 +32,19 @@ jQuery(function ($) {
   // Update issue
   $('body.controller-issues .issue.details .attributes')
     .dblclick(function (event) {
-      doWhatRedmineDoes(event, '#content .contextual a:contains("Edit")');
+      path = document.location.pathname + '/edit';
+      issue_edit = $('#content .contextual:first ' + 'a[href="' +  path + '"]')
+      doWhatRedmineDoes(event, [issue_edit]);
     });
 
 
   // Edit description
-  $('body.controller-issues .issue.details .wiki, body.controller-issues .issue.details .subject').prev().andSelf()
+  $('body.controller-issues .issue.details .wiki, body.controller-issues .issue.details .description').prev().andSelf()
     .dblclick(function (event) {
-      // ideally, the selector should be img[alt="Edit"], but that won't work
-      // given how `elements' is treated by doWhatRedmineDoes, hopefully
-      // a[href="#"] doesn't collide with other thins.
-      doWhatRedmineDoes(event, '#content .contextual a:contains("Edit"), #update .tabular a[href="#"]');
+      path = document.location.pathname + '/edit';
+      issue_edit = $('#content .contextual:first ' + 'a[href="' +  path + '"]');
+      description_edit = $('#all_attributes img[alt="Edit"]').parent();
+      doWhatRedmineDoes(event, [issue_edit, description_edit]);
     });
 
   // Related issues
