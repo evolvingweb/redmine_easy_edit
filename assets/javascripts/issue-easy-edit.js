@@ -30,7 +30,9 @@ jQuery(function ($) {
     });
 
   // Update issue
-  $('body.controller-issues .issue.details .attributes')
+  $('body.controller-issues .issue.details .attributes, ' +
+    'body.controller-issues .issue.details .author, ' +
+    'body.controller-issues .issue.details .subject')
     .dblclick(function (event) {
       path = document.location.pathname + '/edit';
       issue_edit = $('#content .contextual:first ' + 'a[href="' +  path + '"]')
