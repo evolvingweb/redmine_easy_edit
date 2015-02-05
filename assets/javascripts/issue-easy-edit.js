@@ -18,39 +18,38 @@ jQuery(function ($) {
   }
 
   //  Subtask editing
-  $('body.controller-issues #issue_tree')
-    .dblclick(function (event) {
+  $(document).on('dblclick', 'body.controller-issues #issue_tree', function (event) {
       doWhatRedmineDoes(event, $(this).find('.contextual a:contains("Add")'));
-    });
+  });
 
   //  Issue comments
-  $('body.controller-issues .wiki.editable')
-    .dblclick(function (event) {
+  $(document).on('dblclick', 'body.controller-issues .wiki.editable', function (event) {
       doWhatRedmineDoes(event, $(this).find('.contextual a[title="Edit"]'));
-    });
+  });
 
   // Update issue
-  $('body.controller-issues .issue.details .attributes, ' +
-    'body.controller-issues .issue.details .author, ' +
-    'body.controller-issues .issue.details .subject')
-    .dblclick(function (event) {
+  $(document).on('dblclick',
+                 'body.controller-issues .issue.details .attributes, ' +
+                 'body.controller-issues .issue.details .author, ' +
+                 'body.controller-issues .issue.details .subject', function (event) {
       path = document.location.pathname + '/edit';
       issue_edit = $('#content .contextual:first ' + 'a[href="' +  path + '"]')
       doWhatRedmineDoes(event, [issue_edit]);
-    });
+  });
 
 
   // Edit description
-  $('body.controller-issues .issue.details .wiki, body.controller-issues .issue.details .description').prev().andSelf()
-    .dblclick(function (event) {
+  $(document).on('dblclick',
+                 'body.controller-issues .issue.details .wiki, ' +
+                 'body.controller-issues .issue.details .description', function (event) {
       path = document.location.pathname + '/edit';
       issue_edit = $('#content .contextual:first ' + 'a[href="' +  path + '"]');
       description_edit = $('#all_attributes img[alt="Edit"]').parent();
       doWhatRedmineDoes(event, [issue_edit, description_edit]);
-    });
+  });
 
   // Related issues
-  $('body.controller-issues #relations').dblclick(function (event) {
+  $(document).on('dblclick', 'body.controller-issues #relations', function (event) {
     doWhatRedmineDoes(event, $(this).find('.contextual a:contains("Add")'));
   });
 
