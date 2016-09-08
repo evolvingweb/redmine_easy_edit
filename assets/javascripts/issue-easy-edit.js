@@ -8,7 +8,7 @@ jQuery(function ($) {
     }
     for (idx = 0; idx < elements.length; idx++) {
       element = elements[idx];
-      if ($(element).attr('onclick')) {
+      if ($(element).attr('onclick') || $(element).attr('data-remote')) {
         $(element).click();
       }
       else if ($(element).attr('href')) {
