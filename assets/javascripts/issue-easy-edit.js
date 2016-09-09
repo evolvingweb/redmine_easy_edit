@@ -44,7 +44,8 @@ jQuery(function ($) {
                  'body.controller-issues .issue.details .description', function (event) {
       path = document.location.pathname + '/edit';
       issue_edit = $('#content .contextual:first ' + 'a[href="' +  path + '"]');
-      description_edit = $('#all_attributes img[alt="Edit"]').parent();
+      description_edit = $('#all_attributes #issue_description_and_toolbar')
+        .parent().find('.icon-edit').parent();
       doWhatRedmineDoes(event, [issue_edit, description_edit]);
   });
 
