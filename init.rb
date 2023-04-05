@@ -1,7 +1,7 @@
 require 'redmine'
-
-require File.dirname(__FILE__) + '/lib/ew_easy_edit_hook'
-
+Rails.configuration.to_prepare do
+  require_dependency 'ew_easy_edit_hook'
+end
 Redmine::Plugin.register :redmine_easy_edit do
   name "Easy Edit Plugin"
   author 'Thomas Getgood'
