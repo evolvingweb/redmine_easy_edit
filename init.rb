@@ -1,6 +1,6 @@
 require 'redmine'
 
-require_dependency 'ew_easy_edit_hook'
+require File.dirname(__FILE__) + '/lib/ew_easy_edit_hook'
 
 Redmine::Plugin.register :redmine_easy_edit do
   name "Easy Edit Plugin"
