@@ -1,6 +1,6 @@
 require_dependency 'application_helper'
 
-class EWEasyEditHook < Redmine::Hook::ViewListener
+class EwEasyEditHook < Redmine::Hook::ViewListener
   def view_layouts_base_html_head(context={})
 
     # N.B. Try to include as little js as possible. 
