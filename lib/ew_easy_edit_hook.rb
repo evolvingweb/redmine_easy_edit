@@ -1,9 +1,7 @@
-require_dependency 'application_helper'
-
 class EwEasyEditHook < Redmine::Hook::ViewListener
   def view_layouts_base_html_head(context={})
 
-    # N.B. Try to include as little js as possible. 
+    # N.B. Try to include as little js as possible.
 
     controller = context[:controller]
 
@@ -14,7 +12,7 @@ class EwEasyEditHook < Redmine::Hook::ViewListener
     if controller.class.name == "IssuesController" then
       files += %w{issue-easy-edit.js}
     elsif controller.class.name == "WikiController" then
-    
+
       request = context[:request]
       action = request.parameters[:action]
 
@@ -25,9 +23,8 @@ class EwEasyEditHook < Redmine::Hook::ViewListener
       end
     end
 
-    files.map do |file| 
+    files.map do |file|
       javascript_include_tag(file, :plugin=> 'redmine_easy_edit')
     end
   end
 end
-
